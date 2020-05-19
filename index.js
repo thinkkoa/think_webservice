@@ -2,7 +2,7 @@
  * @ author: richen
  * @ copyright: Copyright (c) - <richenlin(at)gmail.com>
  * @ license: MIT
- * @ version: 2020-05-19 09:27:32
+ * @ version: 2020-05-19 09:30:30
  */
 
 const soap = require('soap');
@@ -20,7 +20,7 @@ const createWS = function (url, options = {}) {
     options = Object.assign({
         endpoint: url,
         description: '',
-        wsdl_options: { timeout: 10000 }
+        wsdl_options: { timeout: 30000 }
     }, options);
     let deferred = helper.getDefer();
     soap.createClient(url, options, function (err, client) {
@@ -36,7 +36,17 @@ const createWS = function (url, options = {}) {
     return deferred.promise;
 };
 
-module.exports = async function (url, methods, params, options = {}, timeout = 10000) {
+/**
+ *
+ *
+ * @param {string} url
+ * @param {string} methods
+ * @param {*} params
+ * @param {number} [timeout=10000]
+ * @param {*} [options={}]
+ * @returns
+ */
+module.exports = async function (url, methods, params, timeout = 10000, options = {}) {
     const key = `WS_${url}`;
     if (!_WS_CLIENTS[key] || !_WS_CLIENTS[key][methods]) {
         _WS_CLIENTS[key] = await createWS(url, options);
